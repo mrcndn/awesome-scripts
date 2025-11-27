@@ -10,7 +10,7 @@ HISTORY_FILE="${HOME}/.zsh_history"
 SESSIONS_DIR="${HOME}/.zsh_sessions"
 PREFERRED_FILE="${HOME}/.zsh_preferred_commands"
 
-# Colors for output
+# Colors for output 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
@@ -54,11 +54,22 @@ if [[ "$ZSH_EVAL_CONTEXT" == "toplevel" ]]; then
     echo -e "\n${YELLOW}[!] NOTICE: You ran this as an executable.${NC}"
     echo "The file is clean, but this specific window still holds old history in memory."
     echo "To fix this window immediately, run:"
-    echo -e "  ${RED}fc -R${NC}"
+    echo -e "  ${RED}HISTSIZE=0; HISTSIZE=50000; fc -R${NC}"
     echo ""
     echo "Tip: Next time, run as ${GREEN}source clean_zsh.sh${NC} to apply automatically."
 else
     # Script is being sourced, so we can directly modify the current shell's memory
+    # 1. Clear in-memory history by temporarily setting HISTSIZE to 0
+    local old_histsize=$HISTSIZE
+    HISTSIZE=0
+    # 2. Restore HISTSIZE (defaulting to 50000 if it was 0 or unset, though we just set it to 0)
+    # If old_histsize was 0, we probably want a useful default.
+    if [[ "$old_histsize" -eq 0 ]]; then
+        HISTSIZE=50000
+    else
+        HISTSIZE=$old_histsize
+    fi
+    # 3. Read the (now empty/preferred) history file back into memory
     fc -R
     echo -e "${GREEN}[✔] Automatically reloaded history for this session!${NC}"
 fi
