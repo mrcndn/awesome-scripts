@@ -10,12 +10,16 @@ if [ -z "$1" ]; then
     echo "Usage: runscript <script_name> [args...]"
     echo ""
     echo "Available scripts:"
-    for dir in sh python javascript; do
-        [ -d "$SCRIPT_DIR/$dir" ] || continue
-        for f in "$SCRIPT_DIR/$dir"/*; do
-            [ -f "$f" ] || continue
-            name="$(basename "$f")"
-            printf "  %-30s [%s]\n" "${name%.*}" "$dir"
+    for lang in sh python javascript; do
+        [ -d "$SCRIPT_DIR/$lang" ] || continue
+        for entry in "$SCRIPT_DIR/$lang"/*; do
+            if [ -d "$entry" ]; then
+                name="$(basename "$entry")"
+                printf "  %-30s [%s]\n" "$name" "$lang"
+            elif [ -f "$entry" ]; then
+                name="$(basename "$entry")"
+                printf "  %-30s [%s]\n" "${name%.*}" "$lang"
+            fi
         done
     done
     exit 0
@@ -45,18 +49,28 @@ find_script() {
         fi
     done
     
-    # 3. Match in known subdirectories of SCRIPT_DIR
+    # 3. Match in known subdirectories of SCRIPT_DIR (flat files)
     for dir in sh python javascript; do
         if [ -d "$SCRIPT_DIR/$dir" ]; then
-            # Exact match in subdirectory
             if [ -f "$SCRIPT_DIR/$dir/$target" ]; then
                 echo "$SCRIPT_DIR/$dir/$target"
                 return 0
             fi
-            # Match with extensions in subdirectory
             for ext in sh py js ts; do
                 if [ -f "$SCRIPT_DIR/$dir/${target}.${ext}" ]; then
                     echo "$SCRIPT_DIR/$dir/${target}.${ext}"
+                    return 0
+                fi
+            done
+        fi
+    done
+
+    # 4. Match in nested subdirectories (sh/script_name/script_name.ext)
+    for dir in sh python javascript; do
+        if [ -d "$SCRIPT_DIR/$dir/$target" ]; then
+            for ext in sh py js ts; do
+                if [ -f "$SCRIPT_DIR/$dir/$target/${target}.${ext}" ]; then
+                    echo "$SCRIPT_DIR/$dir/$target/${target}.${ext}"
                     return 0
                 fi
             done

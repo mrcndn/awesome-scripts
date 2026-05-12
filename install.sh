@@ -14,17 +14,18 @@ echo "Copying scripts..."
 cp -r sh python javascript "$TARGET_DIR/"
 cp run.sh "$TARGET_DIR/runscript"
 
-# 3. Remove scripts that no longer exist in the source
+# 3. Remove files/dirs that no longer exist in the source
 for dir in sh python javascript; do
     target_path="$TARGET_DIR/$dir"
     [ -d "$target_path" ] || continue
-    find "$target_path" -type f | while read -r installed; do
+    find "$target_path" -type f -not -name "README.md" | while read -r installed; do
         relative="${installed#$TARGET_DIR/}"
         if [ ! -f "$relative" ]; then
-            echo "Removing obsolete script: $relative"
+            echo "Removing obsolete: $relative"
             rm "$installed"
         fi
     done
+    find "$target_path" -mindepth 1 -type d -empty -delete 2>/dev/null
 done
 
 # 4. Make the runner script executable

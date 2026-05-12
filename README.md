@@ -21,30 +21,16 @@ Run `runscript` without arguments to see all available scripts.
 
 ## Scripts
 
-### Clean Node (`sh/clean_node.sh`)
-Recursively finds and deletes `node_modules` directories and JS lock files (`package-lock.json`, `bun.lock`, `pnpm-lock.yaml`, `yarn.lock`). Supports dry-run, directory targeting, exclusions, and depth limiting.
+Each script lives in its own directory under `sh/` with its own README.
 
-### Node Secure (`sh/node_secure.sh`)
-3-layer supply-chain security hardening for Node.js projects. Supports npm, bun, pnpm, and yarn.
-
-- **Layer 1**: Install-time protection — `minimumReleaseAge` config, dependency pinning (strip `^`/`~`), `save-exact`, lockfile commit check
-- **Layer 2**: Pre-commit hooks — installs lefthook with audit-on-lock-change hooks
-- **Layer 3**: Scheduled scanning — daily audit via launchd (macOS) or systemd timer (Linux) with desktop notifications
-
-```bash
-runscript node_secure --check-only -d ~/Projects   # report only
-runscript node_secure --all --dry-run               # preview changes
-runscript node_secure --layer1 --audit              # apply + audit
-```
-
-### Clean Zsh History (`sh/clean_zsh_history.sh`)
-Wipes Zsh history and sessions, optionally restoring preferred commands from a backup file.
-
-### Delete History (`sh/delete_history.sh`)
-Safely clears bash history or specific lines to maintain privacy.
-
-### System Info (`sh/system_info.sh`)
-Displays basic system information including OS, Kernel, Uptime, and Memory usage.
+| Script | Description |
+|--------|-------------|
+| [clean_node](sh/clean_node/) | Recursively delete `node_modules` and lock files |
+| [node_secure](sh/node_secure/) | 3-layer supply-chain security hardening (npm, bun, pnpm, yarn) |
+| [clean_zsh_history](sh/clean_zsh_history/) | Wipe Zsh history and sessions |
+| [crossover_trial_reset](sh/crossover_trial_reset/) | Reset CrossOver trial license |
+| [delete_history](sh/delete_history/) | Clear bash history (all or last N lines) |
+| [system_info](sh/system_info/) | Display basic system information |
 
 ## Contributing
 
