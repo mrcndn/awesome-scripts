@@ -28,7 +28,6 @@ Each script lives in its own directory under `sh/` with its own README.
 | [clean_node](sh/clean_node/) | Recursively delete `node_modules` and lock files |
 | [node_secure](sh/node_secure/) | 3-layer supply-chain security hardening (npm, bun, pnpm, yarn) |
 | [clean_zsh_history](sh/clean_zsh_history/) | Wipe Zsh history and sessions |
-| [crossover_trial_reset](sh/crossover_trial_reset/) | Reset CrossOver trial license |
 | [delete_history](sh/delete_history/) | Clear bash history (all or last N lines) |
 | [system_info](sh/system_info/) | Display basic system information |
 
