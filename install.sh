@@ -11,14 +11,26 @@ mkdir -p "$TARGET_DIR"
 
 # 2. Copy scripts and directories
 echo "Copying scripts..."
-# Copy specific scripts and folders to keep the structure clean
 cp -r sh python javascript "$TARGET_DIR/"
-cp run.sh "$TARGET_DIR/run_script"
+cp run.sh "$TARGET_DIR/runscript"
 
-# 3. Make the runner script executable
-chmod +x "$TARGET_DIR/run_script"
+# 3. Remove scripts that no longer exist in the source
+for dir in sh python javascript; do
+    target_path="$TARGET_DIR/$dir"
+    [ -d "$target_path" ] || continue
+    find "$target_path" -type f | while read -r installed; do
+        relative="${installed#$TARGET_DIR/}"
+        if [ ! -f "$relative" ]; then
+            echo "Removing obsolete script: $relative"
+            rm "$installed"
+        fi
+    done
+done
 
-# 4. Determine shells and profiles to modify
+# 4. Make the runner script executable
+chmod +x "$TARGET_DIR/runscript"
+
+# 5. Determine shells and profiles to modify
 PROFILES_UPDATED=0
 
 # Add to PATH function
@@ -50,7 +62,7 @@ fi
 # Print final result
 if [ "$PROFILES_UPDATED" -gt 0 ]; then
     printf "\n\033[32mInstallation complete!\033[0m\n"
-    printf "Please restart your terminal or run \033[33msource ~/.zshrc\033[0m (or your respective profile) to use the 'run_script' command.\n"
+    printf "Please restart your terminal or run \033[33msource ~/.zshrc\033[0m (or your respective profile) to use the 'runscript' command.\n"
 else
-    printf "Installation complete! You can now use the \033[33mrun_script\033[0m command.\n"
+    printf "Installation complete! You can now use the \033[33mrunscript\033[0m command.\n"
 fi

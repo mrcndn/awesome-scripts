@@ -4,10 +4,21 @@
 # It automatically detects the script type (JavaScript, Python, Shell) and runs it
 # with the appropriate engine (bun/node, python3/python, bash).
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 if [ -z "$1" ]; then
-    echo "Usage: ./run.sh <script_name>"
-    echo "Example: ./run.sh crossover_trial_reset"
-    exit 1
+    echo "Usage: runscript <script_name> [args...]"
+    echo ""
+    echo "Available scripts:"
+    for dir in sh python javascript; do
+        [ -d "$SCRIPT_DIR/$dir" ] || continue
+        for f in "$SCRIPT_DIR/$dir"/*; do
+            [ -f "$f" ] || continue
+            name="$(basename "$f")"
+            printf "  %-30s [%s]\n" "${name%.*}" "$dir"
+        done
+    done
+    exit 0
 fi
 
 SCRIPT_ARG="$1"
@@ -15,10 +26,6 @@ SCRIPT_ARG="$1"
 shift
 REST_ARGS=("$@")
 
-# Determine the directory where this script itself is located.
-# This allows us to find the actual scripts (sh, python, javascript) even if
-# we are running this from another path (like after installation to ~/bin/scripts).
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Helper function to find the script
 find_script() {
@@ -89,9 +96,10 @@ elif [ "$EXTENSION" = "py" ] || [[ "$SCRIPT_PATH" == *"python/"* ]]; then
         exit 1
     fi
 elif [ "$EXTENSION" = "sh" ] || [[ "$SCRIPT_PATH" == *"sh/"* ]]; then
-    sh "$SCRIPT_PATH" "${REST_ARGS[@]}"
+    chmod +x "$SCRIPT_PATH" 2>/dev/null
+    "$SCRIPT_PATH" "${REST_ARGS[@]}"
 else
-    # Fallback: try executing it directly if it has executable permissions (and maybe a shebang)
+    chmod +x "$SCRIPT_PATH" 2>/dev/null
     if [ -x "$SCRIPT_PATH" ]; then
         "$SCRIPT_PATH" "${REST_ARGS[@]}"
     else
