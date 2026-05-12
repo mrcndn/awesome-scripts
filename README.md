@@ -1,48 +1,41 @@
 # Awesome Scripts
 
-A collection of useful scripts in various languages to automate daily tasks and improve productivity.
+A collection of useful scripts to automate daily tasks and improve productivity.
 
-## Table of Contents
+## Installation
 
-- [Shell Scripts](#shell-scripts)
-- [Python Scripts](#python-scripts)
-- [JavaScript Scripts](#javascript-scripts)
-- [Contributing](#contributing)
-- [License](#license)
+```bash
+git clone https://github.com/mrcndn/awesome-scripts.git
+cd awesome-scripts
+./install.sh
+```
 
-## Shell Scripts
+After installation, use `runscript` to run any script by name:
 
-Located in the `sh/` directory.
+```bash
+runscript clean_node -a --dry-run
+runscript system_info
+```
+
+Run `runscript` without arguments to see all available scripts.
+
+## Scripts
+
+### Clean Node (`sh/clean_node.sh`)
+Recursively finds and deletes `node_modules` directories and JS lock files (`package-lock.json`, `bun.lock`, `pnpm-lock.yaml`, `yarn.lock`). Supports dry-run, directory targeting, exclusions, and depth limiting.
 
 ### Clean Zsh History (`sh/clean_zsh_history.sh`)
 Wipes Zsh history and sessions, optionally restoring preferred commands from a backup file.
 
 ### Delete History (`sh/delete_history.sh`)
-Safely clear bash history or specific lines to maintain privacy.
+Safely clears bash history or specific lines to maintain privacy.
 
 ### System Info (`sh/system_info.sh`)
 Displays basic system information including OS, Kernel, Uptime, and Memory usage.
 
-## Python Scripts
-
-Located in the `python/` directory.
-
-### Organize Files (`python/organize_files.py`)
-Organizes files in a specified directory into subfolders based on their file extensions.
-
-### JSON to CSV (`python/json_to_csv.py`)
-Converts a JSON file to CSV format for easier data analysis.
-
-## JavaScript Scripts
-
-Located in the `javascript/` directory.
-
-### JSON Formatter (`javascript/json_formatter.js`)
-Reads JSON from stdin or a file and outputs formatted (pretty-printed) JSON.
-
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
